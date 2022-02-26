@@ -3,12 +3,12 @@ import "./BookCard.css";
 import { Link } from "react-router-dom";
 function BookCard(props) {
   return (
-    <div className="col-lg-3 col-md-4 col-sm-6">
+    <div className="col-lg-3 col-md-3 col-sm-4">
       <div className="card">
         <img
           src={props.get_image}
           className="card-img-top"
-          style={{ height: "25rem" }}
+          style={{ height: "400px" }}
           alt="Book Display"
         />
         <div className="card-body">

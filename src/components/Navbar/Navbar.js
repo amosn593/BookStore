@@ -1,9 +1,27 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
-
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+
 function Navbar() {
+  const [cartsize, setCartsize] = useState(0);
+  const { cart } = useSelector((state) => state.user);
+
+  const cartlength = () => {
+    let totalLength = 0;
+
+    for (let i = 0; i < cart.items.length; i++) {
+      totalLength += parseInt(cart.items[i].quantity);
+    }
+
+    setCartsize(totalLength);
+  };
+
+  useEffect(() => {
+    cartlength();
+  }, [cart]);
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container-fluid">
@@ -36,12 +54,12 @@ function Navbar() {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" aria-current="page" to="/">
+              <Link className="nav-link" aria-current="page" to="/novel">
                 Novel
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" aria-current="page" to="/">
+              <Link className="nav-link" aria-current="page" to="/christian">
                 Christian
               </Link>
             </li>
@@ -62,10 +80,10 @@ function Navbar() {
       </form>
       <div className="d-flex">
         <button className="btn btn-light mx-1">Login</button>
-        <button className="btn btn-success mx-1 d-flex">
+        <Link className="btn btn-success mx-1 d-flex" to="/my-cart">
           <FontAwesomeIcon icon={faCartShopping} size="2x" />
-          (0)
-        </button>
+          {cartsize}
+        </Link>
       </div>
     </nav>
   );

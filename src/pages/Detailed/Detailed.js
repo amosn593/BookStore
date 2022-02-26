@@ -2,12 +2,17 @@ import React, { useState, useEffect } from "react";
 import "./Detailed.css";
 import { BaseAxios } from "../../Data/Axios";
 import { useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../states/userSlicer";
 
 function Detailed(props) {
   const [book, setBook] = useState({});
   const [quantity, setQuantity] = useState(1);
+
   const { category_slug } = useParams();
   const { product_slug } = useParams();
+
+  const dispatch = useDispatch();
 
   const changequantity = (e) => {
     e.preventDefault();
@@ -17,7 +22,14 @@ function Detailed(props) {
   const addtocart = (e) => {
     e.preventDefault();
 
-    console.log(quantity);
+    if (isNaN(quantity) || quantity < 1) {
+      setQuantity(1);
+    }
+    const item = {
+      book: book,
+      quantity: quantity,
+    };
+    dispatch(addToCart(item));
   };
 
   useEffect(() => {
@@ -36,7 +48,11 @@ function Detailed(props) {
     <div className="container mt-3">
       <div className="row mb-4">
         <div className="col-md-8">
-          <img src={book.get_image} alt="product display" />
+          <img
+            src={book.get_image}
+            alt="product display"
+            style={{ width: "100%", height: "650px" }}
+          />
         </div>
         <div className="col-md-4 overflow-hidden">
           <h2 className="text-center pt-2">Information</h2>
