@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { toast } from "bulma-toast";
 import "./Detailed.css";
 import { BaseAxios } from "../../Data/Axios";
 import { useParams } from "react-router-dom";
@@ -30,6 +31,14 @@ function Detailed(props) {
       quantity: quantity,
     };
     dispatch(addToCart(item));
+    toast({
+      message: "The Book was added to the Cart successfully.",
+      type: "is-success",
+      dismissible: true,
+      pauseOnHover: true,
+      duration: 2000,
+      position: "bottom-right",
+    });
   };
 
   useEffect(() => {

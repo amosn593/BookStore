@@ -18,6 +18,14 @@ export const userSlicer = createSlice({
       } else {
         localStorage.setItem("cart", JSON.stringify(state.cart));
       }
+
+      if (localStorage.getItem("token")) {
+        state.token = localStorage.getItem("token");
+        state.isAuthenticated = true;
+      } else {
+        state.token = "";
+        state.isAuthenticated = false;
+      }
     },
 
     addToCart: (state, action) => {
@@ -85,6 +93,15 @@ export const userSlicer = createSlice({
       //store the cart in the local storage
       localStorage.setItem("cart", JSON.stringify(state.cart));
     },
+
+    setToken: (state, action) => {
+      state.token = action.payload.token;
+      state.isAuthenticated = true;
+    },
+    removeToken: (state) => {
+      state.token = "";
+      state.isAuthenticated = false;
+    },
   },
 });
 
@@ -94,6 +111,8 @@ export const {
   increment,
   decrement,
   removeCartItem,
+  setToken,
+  removeToken,
 } = userSlicer.actions;
 
 export default userSlicer.reducer;

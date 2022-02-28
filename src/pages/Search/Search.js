@@ -1,36 +1,33 @@
 import React, { useState, useEffect } from "react";
+import "./Search.css";
 import { BaseAxios } from "../../Data/Axios";
 import BookCard from "../../components/BookCard/BookCard";
-import { useParams } from "react-router-dom";
 
-function Novel() {
-  const [novel, setNovel] = useState([]);
+function Search() {
+  const [searchResult, setSearchResult] = useState([]);
 
-  const { category_slug } = useParams();
+  const searchQuery = window.location.search;
+  const params = new URLSearchParams(searchQuery);
+  const query = params.get("q");
 
   useEffect(() => {
-    const getnovel = async () => {
-      const resp = await BaseAxios.get(`/api/v1/products/${category_slug}/`);
+    const getsearchresult = async () => {
+      const resp = await BaseAxios.post(`/api/v1/productsearch/${query}/`);
       if (resp.status === 200) {
-        setNovel(resp.data[0].products);
+        setSearchResult(resp.data);
       }
     };
-    getnovel();
+    getsearchresult();
   }, []);
+
   return (
     <div className="container-fluid">
-      <div className="container bg-dark py-4 mt-3 mb-5">
-        <h4 className="text-center mb-4 home_intro">
-          Welcome to Online BookStore
-        </h4>
-        <p className="text-center text-muted mb-5">The Best Online BookStore</p>
-      </div>
       <div className="col-md-12">
         <h2 className="text-center py-4">Latest Novels</h2>
       </div>
       <div className="container">
         <div className="row mb-4 mt-3">
-          {novel.map((book, index) => {
+          {searchResult.map((book, index) => {
             return (
               <BookCard
                 get_image={book.get_thumbnail}
@@ -47,4 +44,4 @@ function Novel() {
   );
 }
 
-export default Novel;
+export default Search;

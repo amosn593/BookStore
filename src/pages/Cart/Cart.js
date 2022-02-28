@@ -2,14 +2,20 @@ import React, { useState, useEffect } from "react";
 import "./Cart.css";
 import CartItem from "../../components/CartItem/CartItem";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Cart() {
   const { cart } = useSelector((state) => state.user);
 
+  const navigate = useNavigate();
+
   const [cartlength, setCartlength] = useState(0);
 
   const [TotalPrice, setTotalPrice] = useState(0);
+
+  const continueShopping = () => {
+    navigate(-2);
+  };
 
   const getcartTotalLength = () => {
     const total = cart.items.reduce((acc, curval) => {
@@ -82,7 +88,12 @@ function Cart() {
           </button>
         )}
 
-        <button className="btn btn-secondary mx-2 my-1">
+        <button
+          className="btn btn-secondary mx-2 my-1"
+          onClick={() => {
+            continueShopping();
+          }}
+        >
           Continue Shopping
         </button>
       </div>

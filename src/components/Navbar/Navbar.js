@@ -2,11 +2,20 @@ import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Navbar() {
   const [cartsize, setCartsize] = useState(0);
+  const [query, setQuery] = useState("");
   const { cart } = useSelector((state) => state.user);
+
+  const navigate = useNavigate();
+
+  const post = (e) => {
+    e.preventDefault();
+    navigate(`/search?q=${query}`);
+    setQuery("");
+  };
 
   const cartlength = () => {
     let totalLength = 0;
@@ -66,20 +75,30 @@ function Navbar() {
           </ul>
         </div>
       </div>
-      <form className="d-flex">
+      <form
+        className="d-flex"
+        onSubmit={(e) => {
+          post(e);
+        }}
+      >
         <input
           className="form-control me-2"
           type="search"
+          required
           placeholder="Search"
           aria-label="Search"
           width={40}
+          onChange={(e) => setQuery(e.target.value)}
+          value={query}
         />
         <button className="btn btn-outline-success" type="submit">
           Search
         </button>
       </form>
       <div className="d-flex">
-        <button className="btn btn-light mx-1">Login</button>
+        <Link className="btn btn-light mx-1" to="/login">
+          Login
+        </Link>
         <Link className="btn btn-success mx-1 d-flex" to="/my-cart">
           <FontAwesomeIcon icon={faCartShopping} size="2x" />
           {cartsize}
