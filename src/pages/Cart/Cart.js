@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./Cart.css";
 import CartItem from "../../components/CartItem/CartItem";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Cart() {
   const { cart } = useSelector((state) => state.user);
@@ -83,9 +83,9 @@ function Cart() {
         </strong>
         <hr />
         {cart.items.length && (
-          <button className="btn btn-warning mx-2 my-1">
+          <Link className="btn btn-warning mx-2 my-1" to="/my-cart/checkout">
             Proceed To CheckOut
-          </button>
+          </Link>
         )}
 
         <button

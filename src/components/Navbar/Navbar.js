@@ -8,6 +8,7 @@ function Navbar() {
   const [cartsize, setCartsize] = useState(0);
   const [query, setQuery] = useState("");
   const { cart } = useSelector((state) => state.user);
+  const { isAuthenticated } = useSelector((state) => state.user);
 
   const navigate = useNavigate();
 
@@ -96,9 +97,16 @@ function Navbar() {
         </button>
       </form>
       <div className="d-flex">
-        <Link className="btn btn-light mx-1" to="/login">
-          Login
-        </Link>
+        {isAuthenticated ? (
+          <Link className="btn btn-light mx-1" to="/my-account">
+            My Account
+          </Link>
+        ) : (
+          <Link className="btn btn-light mx-1" to="/login">
+            Login
+          </Link>
+        )}
+
         <Link className="btn btn-success mx-1 d-flex" to="/my-cart">
           <FontAwesomeIcon icon={faCartShopping} size="2x" />
           {cartsize}

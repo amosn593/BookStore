@@ -3,19 +3,28 @@ import "./Auth.css";
 import { Link, useNavigate } from "react-router-dom";
 import { BaseAxios } from "../../Data/Axios";
 import { toast } from "bulma-toast";
+import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { setToken } from "../../states/userSlicer";
 
 function Login() {
+  const { isAuthenticated } = useSelector((state) => state.user);
+
+  const dispatch = useDispatch();
+
+  const navigate = useNavigate();
+
   document.title = "Log In | BookStore";
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const [errors, setErrors] = useState([]);
 
-  const dispatch = useDispatch();
+  if (isAuthenticated) {
+    navigate(-1);
+  }
 
-  const navigate = useNavigate();
   const loginuser = (e) => {
     e.preventDefault();
     setErrors([]);
@@ -37,11 +46,12 @@ function Login() {
           const resp = await BaseAxios.post("/api/v1/token/login/", formData);
           if (resp.status === 200) {
             const token = resp.data.auth_token;
-            dispatch(setToken, token);
+            dispatch(setToken(token));
             BaseAxios.defaults.headers.common["Authorization"] =
               "Token " + token;
 
             localStorage.setItem("token", token);
+
             toast({
               message: "Logged In successfully!!!",
               type: "is-success",

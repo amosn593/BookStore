@@ -46,6 +46,12 @@ export const userSlicer = createSlice({
       //store the cart in the local storage
       localStorage.setItem("cart", JSON.stringify(state.cart));
     },
+    clearCart: (state) => {
+      state.cart = {
+        items: [],
+      };
+      localStorage.removeItem("cart");
+    },
 
     increment: (state, action) => {
       //Check if book already exists in the cart
@@ -113,6 +119,7 @@ export const {
   removeCartItem,
   setToken,
   removeToken,
+  clearCart,
 } = userSlicer.actions;
 
 export default userSlicer.reducer;

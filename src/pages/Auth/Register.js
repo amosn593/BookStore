@@ -3,9 +3,11 @@ import "./Auth.css";
 import { Link, useNavigate } from "react-router-dom";
 import { BaseAxios } from "../../Data/Axios";
 import { toast } from "bulma-toast";
+import { useSelector } from "react-redux";
 
 function Register() {
   document.title = "Register | BookStore";
+  const { isAuthenticated } = useSelector((state) => state.user);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -13,6 +15,10 @@ function Register() {
   const [errors, setErrors] = useState([]);
 
   const navigate = useNavigate();
+
+  if (isAuthenticated) {
+    navigate(-1);
+  }
 
   const register = (e) => {
     e.preventDefault();

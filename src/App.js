@@ -35,8 +35,10 @@ function App() {
         />
         <Route path="/:category_slug/" element={<pages.Novel />} />
         <Route path="/my-cart" element={<pages.Cart />} />
+        <Route path="/my-cart/checkout" element={<pages.CheckOut />} />
         <Route path="/login" element={<pages.Login />} />
         <Route path="/register" element={<pages.Register />} />
+        <Route path="/my-account" element={<pages.MyAccount />} />
       </Routes>
       <components.Footer />
     </Router>
