@@ -1,6 +1,6 @@
 import Home from "./Home/Home";
 import Detailed from "./Detailed/Detailed";
-import Novel from "./Category/Novel";
+import Category from "./Category/Category";
 import Cart from "./Cart/Cart";
 import Search from "./Search/Search";
 import Login from "./Auth/Login";
@@ -12,7 +12,7 @@ import Success from "./Cart/Success";
 const pages = {
   Home,
   Detailed,
-  Novel,
+  Category,
   Cart,
   Search,
   Login,

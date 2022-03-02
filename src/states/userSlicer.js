@@ -12,13 +12,15 @@ export const userSlicer = createSlice({
   },
 
   reducers: {
-    initializeStore: (state) => {
+    initializeCart: (state) => {
       if (localStorage.getItem("cart")) {
         state.cart = JSON.parse(localStorage.getItem("cart"));
       } else {
         localStorage.setItem("cart", JSON.stringify(state.cart));
       }
+    },
 
+    initializeAuth: (state) => {
       if (localStorage.getItem("token")) {
         state.token = localStorage.getItem("token");
         state.isAuthenticated = true;
@@ -107,12 +109,14 @@ export const userSlicer = createSlice({
     removeToken: (state) => {
       state.token = "";
       state.isAuthenticated = false;
+      localStorage.removeItem("token");
     },
   },
 });
 
 export const {
-  initializeStore,
+  initializeCart,
+  initializeAuth,
   addToCart,
   increment,
   decrement,

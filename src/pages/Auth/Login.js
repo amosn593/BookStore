@@ -21,18 +21,23 @@ function Login() {
 
   const [errors, setErrors] = useState([]);
 
+  const [loading, setLoading] = useState(null);
+
   if (isAuthenticated) {
-    navigate(-1);
+    navigate("/");
   }
 
   const loginuser = (e) => {
     e.preventDefault();
     setErrors([]);
+    setLoading(true);
     if (username === "") {
-      errors.push("Username is required");
+      setErrors(["Username is required"]);
+      setLoading(false);
     }
     if (password === "") {
-      errors.push("password is required");
+      setErrors(["password is required"]);
+      setLoading(false);
     }
     if (!errors.length) {
       const formData = {
@@ -41,7 +46,7 @@ function Login() {
         password: password,
       };
 
-      const loginuser = async () => {
+      const login = async () => {
         try {
           const resp = await BaseAxios.post("/api/v1/token/login/", formData);
           if (resp.status === 200) {
@@ -60,24 +65,29 @@ function Login() {
               duration: 3000,
               position: "bottom-right",
             });
-            navigate("/");
+            setLoading(false);
+            navigate("/", { replace: true });
           }
         } catch (err) {
           if (err.response) {
+            const server_errors = [];
             for (const label in err.response.data) {
-              errors.push(`${label}:${err.response.data[label]}`);
+              server_errors.push(`${err.response.data[label]}`);
             }
-            console.log(errors);
+            setErrors(server_errors);
+            setLoading(false);
           } else if (err.message) {
             errors.push("something went wrong, please try again!!!");
-            console.log(errors);
+            setErrors(errors);
+            setLoading(false);
           }
         }
       };
 
-      loginuser();
+      login();
     }
   };
+
   return (
     <main className="form-signin">
       <form
@@ -117,7 +127,26 @@ function Login() {
           <label htmlFor="Password">Password</label>
         </div>
 
-        <button className="w-100 btn btn-lg btn-primary mt-2" type="submit">
+        {errors.length ? (
+          <p
+            className="text-white"
+            style={{
+              backgroundColor: "red",
+              padding: "15px",
+              color: "#fff",
+            }}
+          >
+            {errors}
+          </p>
+        ) : (
+          <p></p>
+        )}
+
+        <button
+          className="w-100 btn btn-lg btn-primary mt-2"
+          type="submit"
+          disabled={loading}
+        >
           Sign in
         </button>
       </form>

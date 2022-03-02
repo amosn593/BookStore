@@ -4,16 +4,21 @@ import "./Home.css";
 import { BaseAxios } from "../../Data/Axios";
 
 function Home() {
+  document.title = "Home | BookStore";
   const [books, setBooks] = useState([]);
 
+  const getbooks = async () => {
+    const resp = await BaseAxios.get("/api/v1/latest-products/");
+    if (resp.status === 200) {
+      setBooks(resp.data);
+    }
+  };
+
   useEffect(() => {
-    const getbooks = async () => {
-      const resp = await BaseAxios.get("/api/v1/latest-products/");
-      if (resp.status === 200) {
-        setBooks(resp.data);
-      }
-    };
     getbooks();
+    return () => {
+      setBooks({}); // prevent memory leak
+    };
   }, []);
   return (
     <div className="container-fluid">

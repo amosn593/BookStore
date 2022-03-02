@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { BaseAxios } from "./Data/Axios";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { initializeStore } from "./states/userSlicer";
+import { initializeCart, initializeAuth } from "./states/userSlicer";
 import { useSelector } from "react-redux";
 import components from "./components";
 import pages from "./pages/index";
@@ -14,12 +14,8 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(initializeStore());
-    if (token) {
-      BaseAxios.defaults.headers.common["Authorization"] = "Token " + token;
-    } else {
-      BaseAxios.defaults.headers.common["Authorization"] = "";
-    }
+    dispatch(initializeAuth());
+    dispatch(initializeCart());
     // eslint-disable-next-line
   }, []);
 
@@ -33,9 +29,10 @@ function App() {
           path="/:category_slug/:product_slug/"
           element={<pages.Detailed />}
         />
-        <Route path="/:category_slug/" element={<pages.Novel />} />
+        <Route path="/:category_slug/" element={<pages.Category />} />
         <Route path="/my-cart" element={<pages.Cart />} />
         <Route path="/my-cart/checkout" element={<pages.CheckOut />} />
+        <Route path="/my-cart/make-mpesa-payment" element={<pages.Success />} />
         <Route path="/login" element={<pages.Login />} />
         <Route path="/register" element={<pages.Register />} />
         <Route path="/my-account" element={<pages.MyAccount />} />

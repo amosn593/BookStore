@@ -1,23 +1,29 @@
 import React, { useState, useEffect } from "react";
+import "./category.css";
 import { BaseAxios } from "../../Data/Axios";
 import BookCard from "../../components/BookCard/BookCard";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
-function Christian() {
-  const [christian, setChristian] = useState([]);
+function Category() {
+  const [category, setCategory] = useState([]);
+
+  const pathname = window.location.pathname;
 
   const { category_slug } = useParams();
 
-  useEffect(() => {
-    const getchristian = async () => {
+  const getcategory = async () => {
+    try {
       const resp = await BaseAxios.get(`/api/v1/products/${category_slug}/`);
       if (resp.status === 200) {
-        setChristian(resp.data[0].products);
-        console.log(resp.data[0].products);
+        setCategory(resp.data[0].products);
       }
-    };
-    getchristian();
-  }, []);
+    } catch (err) {}
+  };
+
+  useEffect(() => {
+    getcategory();
+  }, [pathname]);
+
   return (
     <div className="container-fluid">
       <div className="container bg-dark py-4 mt-3 mb-5">
@@ -31,7 +37,7 @@ function Christian() {
       </div>
       <div className="container">
         <div className="row mb-4 mt-3">
-          {christian.map((book, index) => {
+          {category.map((book, index) => {
             return (
               <BookCard
                 get_image={book.get_thumbnail}
@@ -48,4 +54,4 @@ function Christian() {
   );
 }
 
-export default Christian;
+export default Category;

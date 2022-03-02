@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import "./Search.css";
 import { BaseAxios } from "../../Data/Axios";
 import BookCard from "../../components/BookCard/BookCard";
@@ -6,19 +7,24 @@ import BookCard from "../../components/BookCard/BookCard";
 function Search() {
   const [searchResult, setSearchResult] = useState([]);
 
-  const searchQuery = window.location.search;
-  const params = new URLSearchParams(searchQuery);
-  const query = params.get("q");
+  const [searchParams] = useSearchParams();
 
-  useEffect(() => {
-    const getsearchresult = async () => {
+  const searchQuery = window.location.search;
+
+  const query = searchParams.get("q");
+
+  const getsearchresult = async () => {
+    try {
       const resp = await BaseAxios.post(`/api/v1/productsearch/${query}/`);
       if (resp.status === 200) {
         setSearchResult(resp.data);
       }
-    };
+    } catch (err) {}
+  };
+
+  useEffect(() => {
     getsearchresult();
-  }, []);
+  }, [searchQuery]);
 
   return (
     <div className="container-fluid">

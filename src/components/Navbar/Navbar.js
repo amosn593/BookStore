@@ -99,7 +99,7 @@ function Navbar() {
       <div className="d-flex">
         {isAuthenticated ? (
           <Link className="btn btn-light mx-1" to="/my-account">
-            My Account
+            Profile
           </Link>
         ) : (
           <Link className="btn btn-light mx-1" to="/login">

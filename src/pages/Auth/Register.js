@@ -13,25 +13,34 @@ function Register() {
   const [password, setPassword] = useState("");
   const [re_password, setRe_password] = useState("");
   const [errors, setErrors] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
   if (isAuthenticated) {
-    navigate(-1);
+    navigate("/");
   }
 
   const register = (e) => {
     e.preventDefault();
     setErrors([]);
+    setLoading(true);
 
     if (username === "") {
-      errors.push("Username is required");
+      setErrors(["Username is required"]);
+      setLoading(false);
     }
     if (password === "") {
-      errors.push("password is required");
+      setErrors(["password is required"]);
+      setLoading(false);
+    }
+    if (password.length < 8) {
+      setErrors(["password must be 8 characters and above"]);
+      setLoading(false);
     }
     if (password !== re_password) {
-      errors.push("Passwords doesn't match");
+      setErrors(["Passwords doesn't match"]);
+      setLoading(false);
     }
 
     if (!errors.length) {
@@ -54,17 +63,20 @@ function Register() {
               duration: 3000,
               position: "bottom-right",
             });
+            setLoading(false);
             navigate("/login");
           }
         } catch (err) {
           if (err.response) {
+            const server_errors = [];
             for (const label in err.response.data) {
-              errors.push(`${label}:${err.response.data[label]}`);
+              server_errors.push(`${err.response.data[label]}`);
             }
-            console.log(errors);
+            setErrors(server_errors);
+            setLoading(false);
           } else if (err.message) {
-            errors.push("something went wrong, please try again!!!");
-            console.log(errors);
+            setErrors(["something went wrong, please try again!!!"]);
+            setLoading(false);
           }
         }
       };
@@ -137,13 +149,30 @@ function Register() {
           />
           <label htmlFor="re_Password">Confirm Password</label>
         </div>
-        {errors.length ? <p> errors</p> : <p> no errors</p>}
+        {errors.length ? (
+          <p
+            className="text-white"
+            style={{
+              backgroundColor: "red",
+              padding: "15px",
+              color: "#fff",
+            }}
+          >
+            {errors}
+          </p>
+        ) : (
+          <p></p>
+        )}
 
-        <button className="w-100 btn btn-lg btn-primary mt-2" type="submit">
+        <button
+          className="w-100 btn btn-lg btn-primary mt-2"
+          type="submit"
+          disabled={loading}
+        >
           Sign Up
         </button>
       </form>
-      <p>
+      <p className="mb-5">
         Already have an account? <Link to="/login">Sign In</Link>
       </p>
     </main>

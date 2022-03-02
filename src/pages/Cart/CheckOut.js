@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { clearCart } from "../../states/userSlicer";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import CheckOutItem from "./CheckOutItem";
 import { BaseAxios } from "../../Data/Axios";
 
@@ -29,6 +29,8 @@ function CheckOut() {
 
   const [items, setItems] = useState([]);
 
+  const [loading, setLoading] = useState(false);
+
   const getcartTotalLength = () => {
     const total = cart.items.reduce((acc, curval) => {
       return (acc += parseInt(curval.quantity));
@@ -43,42 +45,44 @@ function CheckOut() {
     setTotalPrice(total);
   };
 
-  const checkout = (e) => {
+  const cartcheckout = (e) => {
     e.preventDefault();
     setErrors([]);
+    setLoading(true);
+
     if (first_name === "") {
-      errors.push("First Name is Required field");
       setErrors(["First Name is Required field"]);
+      setLoading(false);
     }
     if (last_name === "") {
-      errors.push("Last Name is Required field");
       setErrors(["Last Name is Required field"]);
+      setLoading(false);
     }
     if (phone === "") {
-      errors.push("Phone number is Required field");
       setErrors(["Phone number is Required field"]);
+      setLoading(false);
     }
     if (email === "") {
-      errors.push("Email is Required field");
       setErrors(["Email is Required field"]);
+      setLoading(false);
     }
     if (address === "") {
-      errors.push("Address is Required field");
       setErrors(["Address is Required field"]);
+      setLoading(false);
     }
 
     if (place === "") {
-      errors.push("Place is Required field");
-      setErrors(["Place is Required field"]);
+      setErrors("Place is Required field");
+      setLoading(false);
     }
 
     if (mpesa.length > 10 || mpesa.length < 9) {
-      errors.push("Enter 10 digits valid mpesa number");
       setErrors(["Enter 10 digits valid mpesa number"]);
+      setLoading(false);
     }
     if (!parseInt(mpesa)) {
-      errors.push("Enter 10 digits valid mpesa number");
       setErrors(["Enter 10 digits valid mpesa number"]);
+      setLoading(false);
     }
 
     if (!errors.length) {
@@ -92,7 +96,8 @@ function CheckOut() {
         };
         items.push(obj);
       }
-      console.log(items);
+
+      const mpesa_number = parseInt("254" + mpesa.slice(1));
 
       const data = {
         first_name: first_name,
@@ -102,17 +107,31 @@ function CheckOut() {
         address: address,
         place: place,
         paid_amount: TotalPrice,
-        mpesa_number: mpesa,
+        mpesa_number: mpesa_number,
         items: items,
       };
 
-      console.log(data);
       const checkout = async () => {
-        const resp = await BaseAxios.post("/api/v1/checkout/", data);
-        if (resp.status === 201) {
-          dispatch(clearCart());
-          localStorage.removeItem("cart");
-          navigate("/");
+        try {
+          const resp = await BaseAxios.post("/api/v1/checkout/", data);
+          if (resp.status === 201) {
+            dispatch(clearCart());
+            localStorage.removeItem("cart");
+            setLoading(false);
+            navigate("/my-cart/make-mpesa-payment");
+          }
+        } catch (err) {
+          if (err.response) {
+            const server_errors = [];
+            for (const label in err.response.data) {
+              server_errors.push(`${err.response.data[label]}`);
+            }
+            setErrors(server_errors);
+            setLoading(false);
+          } else if (err.message) {
+            setErrors(["something went wrong, please try again!!!"]);
+            setLoading(false);
+          }
         }
       };
       checkout();
@@ -123,6 +142,7 @@ function CheckOut() {
     window.scroll(0, 0);
     getcartTotalLength();
     getTotalPrice();
+    // eslint-disable-next-line
   }, [cart]);
 
   return (
@@ -173,7 +193,7 @@ function CheckOut() {
           </div>
           <div className="col-md-7 col-lg-8">
             <h4 className="mb-3">Billing/Shipping address</h4>
-            <form onSubmit={(e) => checkout(e)}>
+            <form onSubmit={(e) => cartcheckout(e)}>
               <div className="row g-3">
                 <div className="col-sm-6">
                   <label htmlFor="firstName" className="form-label">
@@ -302,7 +322,7 @@ function CheckOut() {
                     Mpesa Number
                   </label>
                   <input
-                    type="number"
+                    type="text"
                     className="form-control"
                     id="cc-name"
                     minLength={10}
@@ -338,7 +358,11 @@ function CheckOut() {
 
               <hr className="my-4" />
 
-              <button className="w-100 btn btn-primary btn-lg" type="submit">
+              <button
+                className="w-100 btn btn-primary btn-lg"
+                type="submit"
+                disabled={loading}
+              >
                 Continue to checkout
               </button>
             </form>
