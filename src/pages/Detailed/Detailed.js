@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "bulma-toast";
 import "./Detailed.css";
-import { BaseAxios } from "../../Data/Axios";
+import useAxios from "../../Data/useAxios";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../states/userSlicer";
@@ -14,6 +14,8 @@ function Detailed(props) {
   const { product_slug } = useParams();
 
   const dispatch = useDispatch();
+
+  const api = useAxios();
 
   const changequantity = (e) => {
     e.preventDefault();
@@ -41,15 +43,16 @@ function Detailed(props) {
     });
   };
 
+  const getbook = async () => {
+    const resp = await api.get(
+      `/api/v1/products/${category_slug}/${product_slug}/`
+    );
+    if (resp.status === 200) {
+      setBook(resp.data);
+    }
+  };
+
   useEffect(() => {
-    const getbook = async () => {
-      const resp = await BaseAxios.get(
-        `/api/v1/products/${category_slug}/${product_slug}/`
-      );
-      if (resp.status === 200) {
-        setBook(resp.data);
-      }
-    };
     getbook();
   }, []);
 

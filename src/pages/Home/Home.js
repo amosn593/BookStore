@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from "react";
 import BookCard from "../../components/BookCard/BookCard";
 import "./Home.css";
-import { BaseAxios } from "../../Data/Axios";
+import useAxios from "../../Data/useAxios";
 
 function Home() {
   document.title = "Home | BookStore";
   const [books, setBooks] = useState([]);
 
+  const api = useAxios();
+
   const getbooks = async () => {
-    const resp = await BaseAxios.get("/api/v1/latest-products/");
+    const resp = await api.get("/api/v1/latest-products/");
     if (resp.status === 200) {
       setBooks(resp.data);
     }
   };
 
   useEffect(() => {
+    window.scroll(0, 0);
     getbooks();
     return () => {
       setBooks({}); // prevent memory leak

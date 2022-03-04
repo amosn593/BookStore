@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./category.css";
-import { BaseAxios } from "../../Data/Axios";
+import useAxios from "../../Data/useAxios";
 import BookCard from "../../components/BookCard/BookCard";
 import { useParams } from "react-router-dom";
 
@@ -11,16 +11,21 @@ function Category() {
 
   const { category_slug } = useParams();
 
+  const api = useAxios();
+
   const getcategory = async () => {
     try {
-      const resp = await BaseAxios.get(`/api/v1/products/${category_slug}/`);
+      const resp = await api.get(`/api/v1/products/${category_slug}/`);
       if (resp.status === 200) {
         setCategory(resp.data[0].products);
       }
-    } catch (err) {}
+    } catch (err) {
+      setCategory([]);
+    }
   };
 
   useEffect(() => {
+    window.scroll(0, 0);
     getcategory();
   }, [pathname]);
 

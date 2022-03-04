@@ -6,8 +6,8 @@ export const userSlicer = createSlice({
     cart: {
       items: [],
     },
+    access_token: {},
     isAuthenticated: false,
-    token: "",
     isLoading: false,
   },
 
@@ -21,13 +21,24 @@ export const userSlicer = createSlice({
     },
 
     initializeAuth: (state) => {
-      if (localStorage.getItem("token")) {
-        state.token = localStorage.getItem("token");
+      if (localStorage.getItem("access_token")) {
+        state.access_token = JSON.parse(localStorage.getItem("access_token"));
         state.isAuthenticated = true;
       } else {
-        state.token = "";
+        state.access_token = {};
         state.isAuthenticated = false;
       }
+    },
+
+    setToken: (state, action) => {
+      state.access_token = action.payload;
+      localStorage.setItem("access_token", JSON.stringify(state.access_token));
+      state.isAuthenticated = true;
+    },
+    removeToken: (state) => {
+      state.access_token = {};
+      state.isAuthenticated = false;
+      localStorage.removeItem("access_token");
     },
 
     addToCart: (state, action) => {
@@ -100,16 +111,6 @@ export const userSlicer = createSlice({
       }
       //store the cart in the local storage
       localStorage.setItem("cart", JSON.stringify(state.cart));
-    },
-
-    setToken: (state, action) => {
-      state.token = action.payload.token;
-      state.isAuthenticated = true;
-    },
-    removeToken: (state) => {
-      state.token = "";
-      state.isAuthenticated = false;
-      localStorage.removeItem("token");
     },
   },
 });

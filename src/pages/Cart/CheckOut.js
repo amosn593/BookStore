@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { toast } from "bulma-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { clearCart } from "../../states/userSlicer";
 import { useNavigate } from "react-router-dom";
 import CheckOutItem from "./CheckOutItem";
-import { BaseAxios } from "../../Data/Axios";
+import useAxios from "../../Data/useAxios";
+import images from "../../assets/index";
 
 function CheckOut() {
   document.title = "CheckOut | BookStore";
@@ -12,6 +14,8 @@ function CheckOut() {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
+
+  const api = useAxios();
 
   const [cartlength, setCartlength] = useState(0);
 
@@ -113,12 +117,24 @@ function CheckOut() {
 
       const checkout = async () => {
         try {
-          const resp = await BaseAxios.post("/api/v1/checkout/", data);
+          const resp = await api.post("/api/v1/checkout/", data);
+
           if (resp.status === 201) {
             dispatch(clearCart());
             localStorage.removeItem("cart");
             setLoading(false);
             navigate("/my-cart/make-mpesa-payment");
+          } else {
+            toast({
+              message: "something went wrong, please try again!!!",
+              type: "is-success",
+              dismissible: true,
+              pauseOnHover: true,
+              duration: 3000,
+              position: "bottom-right",
+            });
+            setLoading(false);
+            navigate("/my-cart");
           }
         } catch (err) {
           if (err.response) {
@@ -299,17 +315,18 @@ function CheckOut() {
 
               <hr className="my-4" />
 
-              <h4 className="mb-3">Payment Method</h4>
+              <h3 className="mb-3">Payment Method</h3>
 
               <div className="my-3">
                 <div className="form-check">
-                  <input
+                  <img className="mb-4 rounded" src={images.mpesa} alt="logo" />
+                  {/* <input
                     id="mpesa"
                     name="paymentMethod"
                     type="radio"
                     className="form-check-input"
                     required
-                  />
+                  /> */}
                   <label className="form-check-label" htmlFor="mpesa">
                     MPesa
                   </label>

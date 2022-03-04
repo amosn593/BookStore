@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import "./Auth.css";
-import { Link, useNavigate } from "react-router-dom";
-import { BaseAxios } from "../../Data/Axios";
+import images from "../../assets/index";
+import { Link, useNavigate, Navigate } from "react-router-dom";
 import { toast } from "bulma-toast";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { setToken } from "../../states/userSlicer";
+import useAxios from "../../Data/useAxios";
 
 function Login() {
   const { isAuthenticated } = useSelector((state) => state.user);
@@ -14,9 +15,12 @@ function Login() {
 
   const navigate = useNavigate();
 
+  const api = useAxios();
+
   document.title = "Log In | BookStore";
 
   const [username, setUsername] = useState("");
+
   const [password, setPassword] = useState("");
 
   const [errors, setErrors] = useState([]);
@@ -24,7 +28,7 @@ function Login() {
   const [loading, setLoading] = useState(null);
 
   if (isAuthenticated) {
-    navigate("/");
+    return <Navigate to="/" />;
   }
 
   const loginuser = (e) => {
@@ -48,14 +52,11 @@ function Login() {
 
       const login = async () => {
         try {
-          const resp = await BaseAxios.post("/api/v1/token/login/", formData);
+          const resp = await api.post("/api/v1/jwt/create/", formData);
           if (resp.status === 200) {
-            const token = resp.data.auth_token;
-            dispatch(setToken(token));
-            BaseAxios.defaults.headers.common["Authorization"] =
-              "Token " + token;
+            const token = resp.data;
 
-            localStorage.setItem("token", token);
+            dispatch(setToken(token));
 
             toast({
               message: "Logged In successfully!!!",
@@ -69,6 +70,8 @@ function Login() {
             navigate("/", { replace: true });
           }
         } catch (err) {
+          console.log("run");
+          console.log(err);
           if (err.response) {
             const server_errors = [];
             for (const label in err.response.data) {
@@ -77,8 +80,8 @@ function Login() {
             setErrors(server_errors);
             setLoading(false);
           } else if (err.message) {
-            errors.push("something went wrong, please try again!!!");
-            setErrors(errors);
+            console.log("run");
+            setErrors(["something went wrong, please try again!!!"]);
             setLoading(false);
           }
         }
@@ -95,7 +98,7 @@ function Login() {
           loginuser(e);
         }}
       >
-        {/* <img className="mb-4" src="/docs/5.0/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57"/> */}
+        <img className="mb-4 rounded" src={images.logo} alt="logo" />
         <h1 className="h3 mb-3 fw-normal">Please sign in</h1>
 
         <div className="form-floating mb-4">

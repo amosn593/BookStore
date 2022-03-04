@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import "./Auth.css";
-import { Link, useNavigate } from "react-router-dom";
-import { BaseAxios } from "../../Data/Axios";
+import images from "../../assets/index";
+import { Link, useNavigate, Navigate } from "react-router-dom";
+import useAxios from "../../Data/useAxios";
 import { toast } from "bulma-toast";
 import { useSelector } from "react-redux";
 
@@ -17,8 +18,10 @@ function Register() {
 
   const navigate = useNavigate();
 
+  const api = useAxios();
+
   if (isAuthenticated) {
-    navigate("/");
+    return <Navigate to="/" />;
   }
 
   const register = (e) => {
@@ -53,7 +56,7 @@ function Register() {
 
       const registeruser = async () => {
         try {
-          const resp = await BaseAxios.post("/api/v1/users/", formData);
+          const resp = await api.post("/api/v1/users/", formData);
           if (resp.status === 201) {
             toast({
               message: "Account created successfully, please login.",
@@ -92,7 +95,7 @@ function Register() {
           register(e);
         }}
       >
-        {/* <img className="mb-4" src="/docs/5.0/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57"/> */}
+        <img className="mb-4 rounded" src={images.logo} alt="Logo" />
         <h1 className="h3 mb-3 fw-normal">Please sign Up</h1>
         <div className="form-floating mb-4">
           <input
