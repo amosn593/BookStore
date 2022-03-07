@@ -9,7 +9,7 @@ import images from "../../assets/index";
 
 function CheckOut() {
   document.title = "CheckOut | BookStore";
-  const { cart } = useSelector((state) => state.user);
+  const { cart, access_token } = useSelector((state) => state.user);
 
   const navigate = useNavigate();
 
@@ -116,8 +116,14 @@ function CheckOut() {
       };
 
       const checkout = async () => {
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access_token?.access}`,
+          },
+        };
         try {
-          const resp = await api.post("/api/v1/checkout/", data);
+          const resp = await api.post("/api/v1/checkout/", data, config);
 
           if (resp.status === 201) {
             dispatch(clearCart());

@@ -16,6 +16,7 @@ function useAxios() {
     timeout: 3000,
     headers: {
       "Content-Type": "application/json",
+      // Authorization: `Bearer ${access_token?.access}`,
     },
   });
 
@@ -37,7 +38,7 @@ function useAxios() {
             req.headers.Authorization = `Bearer ${response.data.access}`;
             return req;
           } else {
-            dispatch(removeToken)
+            dispatch(removeToken);
             return req;
           }
         } catch (error) {
