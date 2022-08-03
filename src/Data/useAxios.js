@@ -1,10 +1,10 @@
-import axios from "axios";
-import dayjs from "dayjs";
-import jwt_decode from "jwt-decode";
-import { useDispatch, useSelector } from "react-redux";
-import { setToken, removeToken } from "../states/userSlicer";
+import axios from 'axios';
+import dayjs from 'dayjs';
+import jwt_decode from 'jwt-decode';
+import { useDispatch, useSelector } from 'react-redux';
+import { setToken, removeToken } from '../states/userSlicer';
 
-const BaseUrl = "http://127.0.0.1:8000";
+const BaseUrl = 'https://ecommerce-booksapp.herokuapp.com';
 
 function useAxios() {
   const { access_token } = useSelector((state) => state.user);
@@ -13,9 +13,9 @@ function useAxios() {
 
   const BaseAxios = axios.create({
     baseURL: BaseUrl,
-    timeout: 3000,
+    timeout: 20000,
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       // Authorization: `Bearer ${access_token?.access}`,
     },
   });

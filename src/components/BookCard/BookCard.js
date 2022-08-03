@@ -1,7 +1,6 @@
-import React from "react";
-import "./BookCard.css";
-import { Link } from "react-router-dom";
-
+import React from 'react';
+import './BookCard.css';
+import { Link } from 'react-router-dom';
 
 function BookCard(props) {
   return (
@@ -10,7 +9,7 @@ function BookCard(props) {
         <img
           src={props.get_image}
           className="card-img-top"
-          style={{ height: "400px" }}
+          style={{ height: '200px' }}
           alt="Book Display"
         />
         <div className="card-body">

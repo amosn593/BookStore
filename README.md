@@ -1,13 +1,15 @@
 # Online Ecommerce BookStore
 
-Live Demo []().
+Live Site [site](https://link-url-here.org)
 
 Created With ReactJs FrontEnd and Django BackEnd
 
 ## Fuctionality
 
-Cart functionality.
+##### JWT Authentication and Authorization.
 
-Checkout functionality.
+##### Cart functionality.
 
-Integration With Mpesa Payment (STK Push).
+##### Checkout functionality.
+
+##### Integration With Mpesa Payment (STK Push).

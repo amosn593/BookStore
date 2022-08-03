@@ -1,18 +1,25 @@
-import React, { useState, useEffect } from "react";
-import BookCard from "../../components/BookCard/BookCard";
-import "./Home.css";
-import useAxios from "../../Data/useAxios";
+import React, { useState, useEffect } from 'react';
+import BookCard from '../../components/BookCard/BookCard';
+import './Home.css';
+import useAxios from '../../Data/useAxios';
+import Search from '../../components/Search/Search';
+import Spinner from '../../components/Spinner/Spinner';
 
 function Home() {
-  document.title = "Home | BookStore";
+  document.title = 'Home | BookStore';
   const [books, setBooks] = useState([]);
+  const [loading, setLoading] = useState(null);
 
   const api = useAxios();
 
   const getbooks = async () => {
-    const resp = await api.get("/api/v1/latest-products/");
+    setLoading(true);
+    const resp = await api.get('/api/v1/latest-products/');
     if (resp.status === 200) {
       setBooks(resp.data);
+      setLoading(false);
+    } else {
+      setLoading(false);
     }
   };
 
@@ -31,22 +38,29 @@ function Home() {
         </h4>
         <p className="text-center text-muted mb-5">The Best Online BookStore</p>
       </div>
+      <div className="container text-center">
+        <Search />
+      </div>
       <div className="col-md-12">
         <h2 className="text-center py-4">Latest Books</h2>
       </div>
       <div className="container">
         <div className="row mb-4 mt-3">
-          {books.map((book, index) => {
-            return (
-              <BookCard
-                get_image={book.get_thumbnail}
-                name={book.name}
-                price={book.price}
-                get_absolute_url={book.get_absolute_url}
-                key={index}
-              />
-            );
-          })}
+          {loading ? (
+            <Spinner />
+          ) : (
+            books.map((book, index) => {
+              return (
+                <BookCard
+                  get_image={book.get_thumbnail}
+                  name={book.name}
+                  price={book.price}
+                  get_absolute_url={book.get_absolute_url}
+                  key={index}
+                />
+              );
+            })
+          )}
         </div>
       </div>
     </div>

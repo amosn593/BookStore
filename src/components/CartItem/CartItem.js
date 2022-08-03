@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from "react";
-import "./CartItem.css";
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
-import { increment, decrement, removeCartItem } from "../../states/userSlicer";
+import React, { useState, useEffect } from 'react';
+import './CartItem.css';
+import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { increment, decrement, removeCartItem } from '../../states/userSlicer';
 
 function CartItem(props) {
   const { cart } = useSelector((state) => state.user);
 
   const [totalprice, setTotalprice] = useState(0);
+
+  console.log(props);
 
   const dispatch = useDispatch();
 
@@ -45,7 +47,7 @@ function CartItem(props) {
           <img
             src={props.get_image}
             alt="cart item display"
-            style={{ height: "90px" }}
+            style={{ height: '90px' }}
           />
         </Link>
       </td>

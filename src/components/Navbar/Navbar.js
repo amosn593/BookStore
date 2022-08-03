@@ -1,24 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
-import images from "../../assets/index";
-import { useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+import images from '../../assets/index';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 function Navbar() {
   const [cartsize, setCartsize] = useState(0);
-  const [query, setQuery] = useState("");
+
   const { cart } = useSelector((state) => state.user);
   const { isAuthenticated } = useSelector((state) => state.user);
-
-  const navigate = useNavigate();
-
-  const post = (e) => {
-    e.preventDefault();
-    navigate(`/search?q=${query}`);
-    setQuery("");
-  };
 
   const cartlength = () => {
     let totalLength = 0;
@@ -78,45 +70,15 @@ function Navbar() {
           </ul>
         </div>
       </div>
-      <form
-        className="d-flex"
-        onSubmit={(e) => {
-          post(e);
-        }}
-      >
-        <input
-          className="form-control me-2"
-          type="search"
-          required
-          placeholder="Search"
-          aria-label="Search"
-          style={{
-            height: "40px",
-            alignItems: "center",
-          }}
-          width={40}
-          onChange={(e) => setQuery(e.target.value)}
-          value={query}
-        />
-        <button
-          className="btn btn-outline-success"
-          type="submit"
-          style={{
-            height: "40px",
-            alignItems: "center",
-          }}
-        >
-          Search
-        </button>
-      </form>
+
       <div className="d-flex">
         {isAuthenticated ? (
           <Link
             className="btn btn-light mx-1"
             to="/my-account"
             style={{
-              height: "40px",
-              alignItems: "center",
+              height: '40px',
+              alignItems: 'center',
             }}
           >
             <FontAwesomeIcon icon={faUser} size="2x" />
@@ -126,8 +88,8 @@ function Navbar() {
             className="btn btn-light mx-1"
             to="/login"
             style={{
-              height: "40px",
-              alignItems: "center",
+              height: '40px',
+              alignItems: 'center',
             }}
           >
             Login
@@ -138,8 +100,8 @@ function Navbar() {
           className="btn btn-success mx-1 d-flex"
           to="/my-cart"
           style={{
-            height: "40px",
-            alignItems: "center",
+            height: '40px',
+            alignItems: 'center',
           }}
         >
           <FontAwesomeIcon icon={faCartShopping} size="2x" />
