@@ -13,12 +13,18 @@ function Home() {
   const api = useAxios();
 
   const getbooks = async () => {
-    setLoading(true);
-    const resp = await api.get('/api/v1/latest-products/');
-    if (resp.status === 200) {
-      setBooks(resp.data);
-      setLoading(false);
-    } else {
+    try {
+      setLoading(true);
+      const resp = await api.get('/api/v1/latest-products/');
+      if (resp.status === 200) {
+        setBooks(resp.data);
+        setLoading(false);
+      } else {
+        setBooks([]);
+        setLoading(false);
+      }
+    } catch (err) {
+      setBooks([]);
       setLoading(false);
     }
   };
@@ -48,7 +54,7 @@ function Home() {
         <div className="row mb-4 mt-3">
           {loading ? (
             <Spinner />
-          ) : (
+          ) : books.length > 0 ? (
             books.map((book, index) => {
               return (
                 <BookCard
@@ -60,6 +66,10 @@ function Home() {
                 />
               );
             })
+          ) : (
+            <p className="mt-5 py-3 text-danger text-center">
+              Sorry, Books Not Found!!!
+            </p>
           )}
         </div>
       </div>

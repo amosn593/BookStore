@@ -25,6 +25,9 @@ function Search() {
       if (resp.status === 200) {
         setSearchResult(resp.data);
         setLoading(false);
+      } else {
+        setSearchResult([]);
+        setLoading(false);
       }
     } catch (err) {
       setSearchResult([]);
@@ -35,6 +38,9 @@ function Search() {
   useEffect(() => {
     getsearchresult();
     window.scroll(0, 0);
+    return () => {
+      setSearchResult([]); // prevent memory leak
+    };
   }, [searchQuery]);
 
   return (
@@ -57,7 +63,7 @@ function Search() {
         <div className="row mb-4 mt-3">
           {loading ? (
             <Spinner />
-          ) : (
+          ) : searchResult.length > 0 ? (
             searchResult.map((book, index) => {
               return (
                 <BookCard
@@ -69,6 +75,10 @@ function Search() {
                 />
               );
             })
+          ) : (
+            <p className="mt-5 py-3 text-danger text-center">
+              Sorry, Book Not Found, Kindly search for another Book!!!
+            </p>
           )}
         </div>
       </div>

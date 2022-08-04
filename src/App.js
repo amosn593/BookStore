@@ -1,15 +1,15 @@
-import "./App.css";
-import React, { useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import RequireAuth from "./pages/Auth/RequireAuth";
-import { useDispatch } from "react-redux";
-import { initializeCart, initializeAuth } from "./states/userSlicer";
-import { useSelector } from "react-redux";
-import components from "./components";
-import pages from "./pages/index";
+import './App.css';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import RequireAuth from './pages/Auth/RequireAuth';
+import { useDispatch } from 'react-redux';
+import { initializeCart, initializeAuth } from './states/userSlicer';
+import { useSelector } from 'react-redux';
+import components from './components';
+import pages from './pages/index';
 
 function App() {
-  const { isLoading } = useSelector((state) => state.user);
+  // const { isLoading } = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
 

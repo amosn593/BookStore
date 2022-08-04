@@ -4,6 +4,7 @@ import useAxios from '../../Data/useAxios';
 import BookCard from '../../components/BookCard/BookCard';
 import { useParams } from 'react-router-dom';
 import Spinner from '../../components/Spinner/Spinner';
+import Search from '../../components/Search/Search';
 
 function Category() {
   const [category, setCategory] = useState([]);
@@ -22,6 +23,9 @@ function Category() {
       if (resp.status === 200) {
         setCategory(resp.data[0].products);
         setLoading(false);
+      }else{
+         setCategory([]);
+         setLoading(false);
       }
     } catch (err) {
       setCategory([]);
@@ -32,10 +36,16 @@ function Category() {
   useEffect(() => {
     window.scroll(0, 0);
     getcategory();
+    return () => {
+      setCategory([]); // prevent memory leak
+    };
   }, [pathname]);
 
   return (
     <div className="container-fluid">
+      <div className="container text-center mt-5">
+        <Search />
+      </div>
       <div className="col-md-12">
         <h2 className="text-center py-4">Latest {pathname}</h2>
       </div>
@@ -43,7 +53,7 @@ function Category() {
         <div className="row mb-4 mt-3">
           {loading ? (
             <Spinner />
-          ) : (
+          ) : category.length > 0 ? (
             category.map((book, index) => {
               return (
                 <BookCard
@@ -55,6 +65,10 @@ function Category() {
                 />
               );
             })
+          ) : (
+            <p className="mt-5 py-3 text-danger text-center">
+              Sorry, Books Not Found!!!
+            </p>
           )}
         </div>
       </div>
